@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的个人主页 - 多层级展示</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 自定义动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+
+        /* 页面切换效果 */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .breadcrumb {
+            background-color: rgba(255,255,255,0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* 悬停效果 */
+        .clickable-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-icon:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased text-gray-800">
+    <!-- 导航栏 -->
+    <header class="sticky top-0 z-50 bg-white bg-opacity-90 backdrop-blur-sm shadow-sm">
+        <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <button onclick="navigateTo('home')" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        MyPortfolio
+                    </button>
+                </div>
+
+                <!-- 面包屑导航 (移动端隐藏) -->
+                <div class="hidden md:flex items-center space-x-2 text-sm" id="breadcrumb">
+                    <span class="text-gray-400">首页</span>
+                </div>
+
+                <!-- 导航链接 (桌面端) -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-center space-x-4">
+                        <button onclick="navigateTo('home')" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-blue-600 transition">首页</button>
+                        <button onclick="navigateTo('about')" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-blue-600 transition">关于我</button>
+                        <button onclick="navigateTo('projects')" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-blue-600 transition">项目</button>
+                        <button onclick="navigateTo('blog')" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-blue-600 transition">博客</button>
+                    </div>
+                </div>
+
+                <!-- 移动端菜单按钮 -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white absolute w-full z-50 shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button onclick="navigateTo('home')" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 text-left w-full">首页</button>
+                <button onclick="navigateTo('about')" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 text-left w-full">关于我</button>
+                <button onclick="navigateTo('projects')" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 text-left w-full">项目</button>
+                <button onclick="navigateTo('blog')" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 text-left w-full">博客</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main>
+        <!-- 首页 -->
+        <section id="home-page" class="page min-h-[calc(100vh-4rem)] py-12 bg-gradient-to-r from-blue-50 to-purple-50">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <div class="overflow-hidden rounded-full w-40 h-40 mx-auto mb-6 border-4 border-white shadow-lg">
+                        <img src="https://via.placeholder.com/400x400" alt="头像" class="w-full h-full object-cover">
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4 fade-in">你好，我是 <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">张伟</span></h1>
+                    <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto fade-in delay-1">前端开发者 | UI设计师 | 技术爱好者</p>
+                    <div class="flex justify-center space-x-4 fade-in delay-2">
+                        <button onclick="navigateTo('about')" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-medium shadow-md hover:shadow-lg transition duration-300 transform hover:-translate-y-1">
+                            了解更多
+                        </button>
+                        <button onclick="navigateTo('projects')" class="px-6 py-3 border border-blue-600 text-blue-600 rounded-full font-medium hover:bg-blue-50 transition">
+                            查看项目
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 快速链接部分 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
+                    <!-- 关于我卡片 -->
+                    <div onclick="navigateTo('about')" class="clickable-item bg-white p-6 rounded-xl shadow-md cursor-pointer transition-transform duration-300 fade-in">
+                        <div class="text-blue-600 mb-4">
+                            <i class="fas fa-user text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">关于我</h3>
+                        <p class="text-gray-600">了解我的背景、技能和职业经历</p>
+                        <div class="mt-4 text-blue-600 inline-flex items-center group">
+                            查看详情
+                            <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </div>
+                    </div>
+
+                    <!-- 项目卡片 -->
+                    <div onclick="navigateTo('projects')" class="clickable-item bg-white p-6 rounded-xl shadow-md cursor-pointer transition-transform duration-300 fade-in delay-1">
+                        <div class="text-purple-600 mb-4">
+                            <i class="fas fa-project-diagram text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">我的项目</h3>
+                        <p class="text-gray-600">浏览我完成的各种项目和作品</p>
+                        <div class="mt-4 text-purple-600 inline-flex items-center group">
+                            查看详情
+                            <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </div>
+                    </div>
+
+                    <!-- 博客卡片 -->
+                    <div onclick="navigateTo('blog')" class="clickable-item bg-white p-6 rounded-xl shadow-md cursor-pointer transition-transform duration-300 fade-in delay-2">
+                        <div class="text-green-600 mb-4">
+                            <i class="fas fa-blog text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">技术博客</h3>
+                        <p class="text-gray-600">阅读我的技术文章和学习笔记</p>
+                        <div class="mt-4 text-green-600 inline-flex items-center group">
+                            查看详情
+                            <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于我页面 -->
+        <section id="about-page" class="page py-12 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center mb-8">
+                    <button onclick="navigateBack()" class="mr-4 text-gray-600 hover:text-blue-600 transition">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold">关于我</h2>
+                </div>
+
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/3 mb-10 md:mb-0 fade-in">
+                        <div class="relative">
+                            <img src="https://via.placeholder.com/400x500" alt="个人照片" class="rounded-lg shadow-xl w-full">
+                            <div class="absolute -bottom-4 -right-4 bg-gradient-to-r from-blue-500 to-purple-500 w-1/2 h-1/4 -z-10 rounded-lg"></div>
+                        </div>
+                    </div>
+                    <div class="md:w-2/3 md:pl-16 fade-in delay-1">
+                        <h3 class="text-2xl font-bold mb-4">我是一名充满激情的前端开发者</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            我有5年前端开发经验，专注于创造美观、易用且高性能的Web应用程序。我热爱将设计转化为现实，同时注重用户体验和代码质量。
+                        </p>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            在我的职业生涯中，我已经完成了20多个项目，从小型个人网站到大型企业应用。我相信持续学习和技术分享的重要性，因此在GitHub和技术社区中活跃贡献。
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="flex items-center">
+                                <span class="bg-blue-100 text-blue-800 p-2 rounded-full mr-3">
+                                    <i class="fas fa-user-graduate"></i>
+                                </span>
+                                <div>
+                                    <h4 class="font-medium">学位</h4>
+                                    <p class="text-sm text-gray-500">计算机科学学士</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="bg-purple-100 text-purple-800 p-2 rounded-full mr-3">
+                                    <i class="fas fa-briefcase"></i>
+                                </span>
+                                <div>
+                                    <h4 class="font-medium">经验</h4>
+                                    <p class="text-sm text-gray-500">5+ 年工作经验</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="bg-green-100 text-green-800 p-2 rounded-full mr-3">
+                                    <i class="fas fa-project-diagram"></i>
+                                </span>
+                                <div>
+                                    <h4 class="font-medium">项目</h4>
+                                    <p class="text-sm text-gray-500">20+ 完成项目</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="bg-yellow-100 text-yellow-800 p-2 rounded-full mr-3">
+                                    <i class="fas fa-heart"></i>
+                                </span>
+                                <div>
+                                    <h4 class="font-medium">兴趣</h4>
+                                    <p class="text-sm text-gray-500">新技术探索</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <!-- 教育背景 -->
+                            <div>
+                                <h4 class="text-xl font-bold mb-4 border-b pb-2">教育背景</h4>
+                                <div class="pl-2">
+                                    <div class="relative pl-6 pb-6 border-l-2 border-blue-200 before:absolute before:w-3 before:h-3 before:bg-blue-600 before:rounded-full before:-left-[7px]">
+                                        <h5 class="font-medium">清华大学</h5>
+                                        <p class="text-sm text-gray-500 mb-1">计算机科学学士 | 2014-2018</p>
+                                        <p class="text-gray-600">主修前端开发技术，辅修用户体验设计，GPA 3.8/4.0</p>
+                                    </div>
+                                    <div class="relative pl-6 pt-4 border-l-2 border-blue-200 before:absolute before:w-3 before:h-3 before:bg-blue-600 before:rounded-full before:-left-[7px]">
+                                        <h5 class="font-medium">北京大学</h5>
+                                        <p class="text-sm text-gray-500 mb-1">计算机科学硕士 | 2018-2020</p>
+                                        <p class="text-gray-600">研究方向为前端框架性能优化和人机交互</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 工作经历 -->
+                            <div>
+                                <h4 class="text-xl font-bold mb-4 border-b pb-2">工作经历</h4>
+                                <div class="pl-2">
+                                    <div class="relative pl-6 pb-6 border-l-2 border-purple-200 before:absolute before:w-3 before:h-3 before:bg-purple-600 before:rounded-full before:-left-[7px]">
+                                        <h5 class="font-medium">字节跳动</h5>
+                                        <p class="text-sm text-gray-500 mb-1">高级前端工程师 | 2020-至今</p>
+                                        <p class="text-gray-600">负责核心产品的前端架构设计，带领5人团队开发</p>
+                                    </div>
+                                    <div class="relative pl-6 pt-4 border-l-2 border-purple-200 before:absolute before:w-3 before:h-3 before:bg-purple-600 before:rounded-full before:-left-[7px]">
+                                        <h5 class="font-medium">腾讯科技</h5>
+                                        <p class="text-sm text-gray-500 mb-1">前端开发工程师 | 2018-2020</p>
+                                        <p class="text-gray-600">参与微信小程序开发和性能优化</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 项目页面 -->
+        <section id="projects-page" class="page py-12 bg-gray-50">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center mb-8">
+                    <button onclick="navigateBack()" class="mr-4 text-gray-600 hover:text-blue-600 transition">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold">我的项目</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 项目1 -->
+                    <div onclick="navigateTo('project-detail', 'project1')" class="clickable-item bg-white rounded-xl overflow-hidden shadow-md transition-transform duration-300 cursor-pointer fade-in">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://via.placeholder.com/600x400" alt="项目1" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <span class="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-medium">2023</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">企业管理系统</h3>
+                            <p class="text-gray-600 mb-4">一个全面的企业内部管理系统，包含员工管理、任务分配和数据分析功能。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">React</span>
+                                <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">Node.js</span>
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">MongoDB</span>
+                            </div>
+                            <div class="text-blue-600 font-medium inline-flex items-center group">
+                                查看详情
+                                <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 项目2 -->
+                    <div onclick="navigateTo('project-detail', 'project2')" class="clickable-item bg-white rounded-xl overflow-hidden shadow-md transition-transform duration-300 cursor-pointer fade-in delay-1">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://via.placeholder.com/600x400" alt="项目2" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <span class="absolute top-4 right-4 bg-purple-500 text-white px-3 py-1 rounded-full text-xs font-medium">2022</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">电商平台</h3>
+                            <p class="text-gray-600 mb-4">一个现代化的电子商务网站，具有商品展示、购物车和支付功能。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Vue.js</span>
+                                <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">Firebase</span>
+                                <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">Stripe</span>
+                            </div>
+                            <div class="text-blue-600 font-medium inline-flex items-center group">
+                                查看详情
+                                <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 项目3 -->
+                    <div onclick="navigateTo('project-detail', 'project3')" class="clickable-item bg-white rounded-xl overflow-hidden shadow-md transition-transform duration-300 cursor-pointer fade-in delay-1">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://via.placeholder.com/600x400" alt="项目3" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <span class="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">2021</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">健康跟踪应用</h3>
+                            <p class="text-gray-600 mb-4">一款帮助用户跟踪健康指标、锻炼和饮食的移动应用程序。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">React Native</span>
+                                <span class="bg-pink-100 text-pink-800 text-xs px-2 py-1 rounded">GraphQL</span>
+                                <span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded">DynamoDB</span>
+                            </div>
+                            <div class="text-blue-600 font-medium inline-flex items-center group">
+                                查看详情
+                                <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 项目4 -->
+                    <div onclick="navigateTo('project-detail', 'project4')" class="clickable-item bg-white rounded-xl overflow-hidden shadow-md transition-transform duration-300 cursor-pointer fade-in delay-2">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://via.placeholder.com/600x400" alt="项目4" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <span class="absolute top-4 right-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium">2020</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">在线学习平台</h3>
+                            <p class="text-gray-600 mb-4">一个互动式在线教育平台，包含视频课程、测验和项目评估功能。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Angular</span>
+                                <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">NestJS</span>
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">PostgreSQL</span>
+                            </div>
+                            <div class="text-blue-600 font-medium inline-flex items-center group">
+                                查看详情
+                                <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 项目详情页面 -->
+        <section id="project-detail-page" class="page py-12 bg-white">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center mb-8">
+                    <button onclick="navigateBack()" class="mr-4 text-gray-600 hover:text-blue-600 transition">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold" id="project-title">项目详情</h2>
+                </div>
+
+                <div id="project-detail-content">
+                    <!-- 内容将由JavaScript动态加载 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 博客页面 -->
+        <section id="blog-page" class="page py-12 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center mb-8">
+                    <button onclick="navigateBack()" class="mr-4 text-gray-600 hover:text-blue-600 transition">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold">技术博客</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <!-- 博客文章1 -->
+                    <div onclick="navigateTo('blog-detail', 'blog1')" class="clickable-item bg-gray-50 rounded-xl overflow-hidden shadow-md transition-transform duration-300 cursor-pointer fade-in">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://via.placeholder.com/600x400" alt="博客1" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-2">前端开发</span>
+                                <span class="text-gray-500 text-sm">2023年5月15日</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">React Hooks 最佳实践</h3>
+                            <p class="text-gray-600 mb-4">深入探讨React Hooks的使用方式和性能优化技巧，帮助您写出更优雅的React代码...</p>
+                            <div class="flex items-center text-blue-600">
+                                <span class="text-sm font-medium">阅读更多</span>
+                                <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 博客文章2 -->
+                    <div onclick="navigateTo('blog-detail', 'blog2')" class="clickable-item bg-gray-50 rounded-xl overflow-hidden shadow-md transition-transform duration-300 cursor-pointer fade-in delay-1">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://via.placeholder.com/600x400" alt="博客2" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded mr-2">性能优化</span>
+                                <span class="text-gray-500 text-sm">2023年4月2日</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">前端性能优化的终极指南</h3>
+                            <p class="text-gray-600 mb-4">从加载时间到运行时性能，全面介绍现代Web应用的性能优化策略和方法...</p>
+                            <div class="flex items-center text-green-600">
+                                <span class="text-sm font-medium">阅读更多</span>
+                                <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 博客文章3 -->
+                    <div onclick="navigateTo('blog-detail', 'blog3')" class="clickable-item bg-gray-50 rounded-xl overflow-hidden shadow-md transition-transform duration-300 cursor-pointer fade-in delay-1">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://via.placeholder.com/600x400" alt="博客3" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded mr-2">工具链</span>
+                                <span class="text-gray-500 text-sm">2023年3月10日</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Vite vs Webpack: 现代构建工具对比</h3>
+                            <p class="text-gray-600 mb-4">详细比较Vite和Webpack在开发体验、构建速度和生产环境性能的差异...</p>
+                            <div class="flex items-center text-purple-600">
+                                <span class="text-sm font-medium">阅读更多</span>
+                                <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 博客文章4 -->
+                    <div onclick="navigateTo('blog-detail', 'blog4')" class="clickable-item bg-gray-50 rounded-xl overflow-hidden shadow-md transition-transform duration-300 cursor-pointer fade-in delay-2">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://via.placeholder.com/600x400" alt="博客4" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded mr-2">设计模式</span>
+                                <span class="text-gray-500 text-sm">2023年2月18日</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">前端架构中的设计模式应用</h3>
+                            <p class="text-gray-600 mb-4">探索如何在前端项目中应用常见的设计模式来提高代码的可维护性和可扩展性...</p>
+                            <div class="flex items-center text-yellow-600">
+                                <span class="text-sm font-medium">阅读更多</span>
+                                <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button class="px-6 py-3 border border-blue-600 text-blue-600 rounded-full font-medium hover:bg-blue-50 transition">
+                        加载更多文章
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 博客详情页面 -->
+        <section id="blog-detail-page" class="page py-12 bg-white">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center mb-8">
+                    <button onclick="navigateBack()" class="mr-4 text-gray-600 hover:text-blue-600 transition">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold" id="blog-detail-title">博客详情</h2>
+                </div>
+
+                <article id="blog-detail-content" class="prose max-w-none">
+                    <!-- 内容将由JavaScript动态加载 -->
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <button onclick="navigateTo('home')" class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        MyPortfolio
+                    </button>
+                </div>
+
+                <div class="flex space-x-6 mb-6 md:mb-0">
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+
+                <div class="text-gray-400 text-sm">
+                    &copy; 2023 我的个人主页. 保留所有权利.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-blue-600 text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-blue-700">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // 初始化面包屑导航
+        let breadcrumbs = [
+            { name: '首页', id: 'home' }
+        ];
+
+        // 页面导航历史
+        let pageHistory = ['home'];
+
+        // 项目数据 (模拟从API获取)
+        const projects = {
+            project1: {
+                title: "企业管理系统",
+                year: "2023",
+                category: "Web应用",
+                description: "这是一个面向大型企业的完整内部管理系统，包含员工管理、任务分配、数据分析和报告生成等模块。系统采用了现代化的前端架构和响应式设计，确保在不同设备上都有良好的用户体验。",
+                technologies: ["React", "Redux", "Node.js", "Express", "MongoDB"],
+                features: [
+                    "基于角色的访问控制系统",
+                    "实时的数据分析图表",
+                    "可定制的工作流引擎",
+                    "与Slack和Teams集成",
+                    "自动生成PDF报告"
+                ],
+                challenge: "项目的主要挑战是处理大量实时数据的同时保持界面流畅，我们通过React的虚拟滚动和Redux的性能优化解决了这些问题。",
+                images: [
+                    "https://via.placeholder.com/800x500",
+                    "https://via.placeholder.com/800x500",
+                    "https://via.placeholder.com/800x500"
+                ]
+            },
+            project2: {
+                title: "电商平台",
+                year: "2022",
+                category: "电子商务",
+                description: "一个完整的B2C电子商务平台，允许商家开设店铺并销售商品，消费者可以浏览、购买和评价商品。平台支持多种支付方式和国际化的配送解决方案。",
+                technologies: ["Vue.js", "Vuex", "Firebase", "Stripe", "SCSS"],
+                features: [
+                    "响应式设计和移动优先",
+                    "实时库存管理系统",
+                    "支持多种支付方式",
+                    "用户评价和评分系统",
+                    "推荐引擎和个性化内容"
+                ],
+                challenge: "确保高流量情况下的稳定性和快速加载时间是最大的挑战。我们使用了CDN和懒加载技术，并优化了数据库查询。",
+                images: [
+                    "https://via.placeholder.com/800x500",
+                    "https://via.placeholder.com/800x500",
+                    "https://via.placeholder.com/800x500"
+                ]
+            }
+        };
+
+        // 博客数据 (模拟从API获取)
+        const blogs = {
+            blog1: {
+                title: "React Hooks 最佳实践",
+                category: "前端开发",
+                date: "2023年5月15日",
+                author: "张伟",
+                content: `
+                    <h3>React Hooks 简介</h3>
+                    <p>React Hooks 是 React 16.8 版本引入的一项特性，它允许你在不编写 class 的情况下使用 state 以及其他 React 特性。Hooks 解决了 class 组件中的许多问题，包括代码复用困难、逻辑拆分复杂等。</p>
+
+                    <h3>基础 Hooks 使用</h3>
+                    <p>最常用的 Hooks 包括 useState 和 useEffect。useState 用于在函数组件中添加状态，而 useEffect 用于处理副作用，如数据获取、订阅等。</p>
+                    <pre><code class="language-javascript">function Example() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    document.title = \`You clicked \${count} times\`;
+  });
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;You clicked {count} times&lt;/p&gt;
+      &lt;button onClick={() => setCount(count + 1)}&gt;
+        Click me
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+                    <h3>自定义 Hooks</h3>
+                    <p>自定义 Hook 是一个函数，其名称以 "use" 开头，可以调用其他 Hook。通过自定义 Hook，可以将组件逻辑提取到可重用的函数中。</p>
+                    <pre><code class="language-javascript">function useFriendStatus(friendID) {
+  const [isOnline, setIsOnline] = useState(null);
+
+  useEffect(() => {
+    function handleStatusChange(status) {
+      setIsOnline(status.isOnline);
+    }
+
+    ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
+    };
+  });
+
+  return isOnline;
+}</code></pre>
+
+                    <h3>性能优化</h3>
+                    <p>使用 useMemo 可以缓存计算结果，避免在每次渲染时都进行高开销的计算。useCallback 则可以用来缓存函数定义。</p>
+                    <pre><code class="language-javascript">const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+
+const memoizedCallback = useCallback(
+  () => {
+    doSomething(a, b);
+  },
+  [a, b],
+);</code></pre>
+
+                    <h3>最佳实践</h3>
+                    <ul>
+                        <li>只在最顶层使用 Hooks</li>
+                        <li>只在 React 函数中调用 Hooks</li>
+                        <li>为 effect 添加正确的依赖项</li>
+                        <li>使用多个 effect 分离关注点</li>
+                        <li>为自定义 Hook 选择描述性的名称</li>
+                    </ul>
+                `,
+                tags: ["React", "Hooks", "前端", "性能优化"]
+            },
+            blog2: {
+                title: "前端性能优化的终极指南",
+                category: "性能优化",
+                date: "2023年4月2日",
+                author: "张伟",
+                content: `
+                    <h3>为什么要性能优化？</h3>
+                    <p>在现代Web应用中，性能直接影响用户体验和转化率。研究显示，页面加载时间每增加1秒，转化率就会下降7%。性能优化不仅仅是技术问题，更是业务问题。</p>
+
+                    <h3>加载性能优化</h3>
+                    <p>优化加载时间是最直接提升用户体验的方式：</p>
+                    <ul>
+                        <li><strong>代码拆分和懒加载：</strong> 使用Webpack或Vite的动态导入功能，按需加载JavaScript和CSS</li>
+                        <li><strong>资源压缩：</strong> 使用Gzip或Brotli压缩文本资源，优化图片格式和尺寸</li>
+                        <li><strong>CDN：</strong> 使用内容分发网络加速静态资源的传输</li>
+                        <li><strong>Preload/Prefetch：</strong> 合理利用资源提示预加载关键资源</li>
+                    </ul>
+
+                    <h3>渲染性能优化</h3>
+                    <p>即使内容已经加载，复杂的UI仍然可能导致性能问题：</p>
+                    <pre><code class="language-javascript">// 避免不必要的重新渲染
+const MyComponent = React.memo(function MyComponent(props) {
+  // 只在props改变时重新渲染
+});</code></pre>
+                    <ul>
+                        <li><strong>虚拟滚动：</strong> 对于长列表，只渲染可视区域内的项</li>
+                        <li><strong>避免布局抖动：</strong> 批量读取DOM属性再批量写入</li>
+                        <li><strong>使用CSS动画：</strong> 尽可能使用transform和opacity实现动画</li>
+                        <li><strong>合理使用Web Workers：</strong> 将密集型计算移出主线程</li>
+                    </ul>
+
+                    <h3>运行时性能优化</h3>
+                    <p>应用的持续响应能力同样重要：</p>
+                    <ul>
+                        <li><strong>防抖和节流：</strong> 限制高频率事件的回调执行</li>
+                        <li><strong>内存管理：</strong> 避免内存泄漏，及时清理事件监听器和引用</li>
+                        <li><strong>性能监控：</strong> 使用Lighthouse、Web Vitals等进行持续监测</li>
+                    </ul>
+
+                    <h3>工具链</h3>
+                    <p>选择合适的工具可以事半功倍：</p>
+                    <ul>
+                        <li><strong>Vite：</strong> 快速的开发服务器和构建工具</li>
+                        <li><strong>Webpack Bundle Analyzer：</strong> 分析打包结果</li>
+                        <li><strong>Chrome DevTools：</strong> 性能分析和内存分析</li>
+                        <li><strong>LightHouse：</strong> 全面的Web应用性能检测工具</li>
+                    </ul>
+                `,
+                tags: ["性能优化", "前端", "Web", "工具"]
+            }
+        };
+
+        // 导航到特定页面
+        function navigateTo(pageId, dataId = null) {
+            // 找到当前活动页面并隐藏
+            document.querySelector('.page.active')?.classList.remove('active');
+
+            // 显示目标页面
+            const targetPage = document.getElementById(`${pageId}-page`);
+            targetPage.classList.add('active');
+
+            // 更新面包屑导航
+            let breadcrumbName = '';
+            switch(pageId) {
+                case 'home':
+                    breadcrumbName = '首页';
+                    break;
+                case 'about':
+                    breadcrumbName = '关于我';
+                    break;
+                case 'projects':
+                    breadcrumbName = '我的项目';
+                    break;
+                case 'blog':
+                    breadcrumbName = '技术博客';
+                    break;
+                case 'project-detail':
+                    if (dataId && projects[dataId]) {
+                        breadcrumbName = projects[dataId].title;
+                        loadProjectDetail(dataId);
+                    }
+                    break;
+                case 'blog-detail':
+                    if (dataId && blogs[dataId]) {
+                        breadcrumbName = blogs[dataId].title;
+                        loadBlogDetail(dataId);
+                    }
+                    break;
+            }
+
+            // 更新导航历史
+            pageHistory.push(pageId);
+
+            // 更新面包屑导航
+            if (pageId === 'home') {
+                breadcrumbs = [{ name: '首页', id: 'home' }];
+            } else {
+                if (!breadcrumbs.some(item => item.id === pageId)) {
+                    breadcrumbs.push({ name: breadcrumbName, id: pageId });
+                } else {
+                    // 如果已经存在，只保留到当前位置的面包屑
+                    const index = breadcrumbs.findIndex(item => item.id === pageId);
+                    breadcrumbs = breadcrumbs.slice(0, index + 1);
+                }
+            }
+
+            updateBreadcrumb();
+            window.scrollTo(0, 0);
+        }
+
+        // 返回上一页
+        function navigateBack() {
+            if (pageHistory.length > 1) {
+                pageHistory.pop(); // 移除当前页面
+                const previousPage = pageHistory[pageHistory.length - 1];
+                navigateTo(previousPage);
+            }
+        }
+
+        // 加载项目详情
+        function loadProjectDetail(projectId) {
+            const project = projects[projectId];
+            if (!project) return;
+
+            document.getElementById('project-title').textContent = project.title;
+
+            const contentEl = document.getElementById('project-detail-content');
+            contentEl.innerHTML = `
+                <div class="bg-gray-50 rounded-xl p-6 mb-8">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <div>
+                            <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium mr-2">${project.year}</span>
+                            <span class="inline-block bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-xs font-medium">${project.category}</span>
+                        </div>
+                        <div class="flex space-x-3 mt-3 md:mt-0">
+                            <span class="inline-flex items-center text-gray-600">
+                                <i class="fas fa-eye mr-1"></i> 1,234
+                            </span>
+                            <span class="inline-flex items-center text-gray-600">
+                                <i class="fas fa-heart mr-1"></i> 56
+                            </span>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-4">项目描述</h3>
+                    <p class="text-gray-700 mb-6">${project.description}</p>
+
+                    <h3 class="text-xl font-bold mb-4">技术栈</h3>
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        ${project.technologies.map(tech =>
+                            `<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">${tech}</span>`
+                        ).join('')}
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-4">主要功能</h3>
+                    <ul class="list-disc pl-5 mb-8 space-y-2 text-gray-700">
+                        ${project.features.map(feature =>
+                            `<li>${feature}</li>`
+                        ).join('')}
+                    </ul>
+
+                    <h3 class="text-xl font-bold mb-4">挑战与解决方案</h3>
+                    <p class="text-gray-700 mb-8">${project.challenge}</p>
+
+                    <h3 class="text-xl font-bold mb-4">项目截图</h3>
+                    <div class="grid grid-cols-1 gap-4">
+                        ${project.images.map(img =>
+                            `<div class="rounded-lg overflow-hidden shadow-md">
+                                <img src="${img}" alt="${project.title}截图" class="w-full h-auto">
+                            </div>`
+                        ).join('')}
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between border-t border-b border-gray-200 py-4">
+                    <button onclick="navigateBack()" class="flex items-center text-blue-600">
+                        <i class="fas fa-arrow-left mr-2"></i> 返回项目列表
+                    </button>
+                    <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                        访问项目网站
+                    </a>
+                </div>
+            `;
+        }
+
+        // 加载博客详情
+        function loadBlogDetail(blogId) {
+            const blog = blogs[blogId];
+            if (!blog) return;
+
+            document.getElementById('blog-detail-title').textContent = blog.title;
+
+            const contentEl = document.getElementById('blog-detail-content');
+            contentEl.innerHTML = `
+                <header class="mb-12">
+                    <div class="flex items-center mb-4">
+                        <span class="inline-block px-3 py-1 rounded-full text-sm font-medium mr-3
+                            ${blog.category === '前端开发' ? 'bg-blue-100 text-blue-800' :
+                              blog.category === '性能优化' ? 'bg-green-100 text-green-800' :
+                              'bg-purple-100 text-purple-800'}">
+                            ${blog.category}
+                        </span>
+                        <span class="text-gray-500 text-sm">${blog.date}</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold mb-6">${blog.title}</h1>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
+                            <img src="https://via.placeholder.com/100x100" alt="作者" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-gray-700">作者: ${blog.author}</span>
+                    </div>
+                </header>
+
+                <div class="article-content">
+                    ${blog.content}
+                </div>
+
+                <footer class="mt-12 pt-6 border-t border-gray-200">
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        ${blog.tags.map(tag =>
+                            `<span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">${tag}</span>`
+                        ).join('')}
+                    </div>
+
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <button onclick="navigateBack()" class="flex items-center text-blue-600">
+                            <i class="fas fa-arrow-left mr-2"></i> 返回博客列表
+                        </button>
+
+                        <div class="flex space-x-4">
+                            <button class="flex items-center text-gray-600 hover:text-blue-600">
+                                <i class="far fa-thumbs-up mr-2"></i> 点赞
+                            </button>
+                            <button class="flex items-center text-gray-600 hover:text-blue-600">
+                                <i class="far fa-comment mr-2"></i> 评论
+                            </button>
+                            <button class="flex items-center text-gray-600 hover:text-blue-600">
+                                <i class="fas fa-share-alt mr-2"></i> 分享
+                            </button>
+                        </div>
+                    </div>
+                </footer>
+            `;
+
+            // 如果有需要，可以在这里添加代码高亮功能
+        }
+
+        // 更新面包屑导航
+        function updateBreadcrumb() {
+            const breadcrumbEl = document.getElementById('breadcrumb');
+            if (!breadcrumbEl) return;
+
+            breadcrumbEl.innerHTML = breadcrumbs.map((item, index) => {
+                const isLast = index === breadcrumbs.length - 1;
+                return `
+                    <button onclick="${isLast ? 'return false;' : `navigateTo('${item.id}')`}"
+                        class="${isLast ? 'text-blue-600 cursor-default' : 'text-gray-600 hover:text-blue-600'} transition">
+                        ${item.name}
+                    </button>
+                    ${index < breadcrumbs.length - 1 ? '<span class="text-gray-400">/</span>' : ''}
+                `;
+            }).join('');
+        }
+
+        // 移动端菜单切换
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // 返回顶部按钮
+        window.addEventListener('scroll', function() {
+            const backToTopButton = document.getElementById('back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+
+        document.getElementById('back-to-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 动画效果 - 当元素进入视口时添加动画类
+        function checkAnimation() {
+            const elements = document.querySelectorAll('.fade-in');
+
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+
+                if (elementPosition < windowHeight - 100) {
+                    const delay = element.classList.contains('delay-1') ? 100 :
+                                 element.classList.contains('delay-2') ? 200 :
+                                 element.classList.contains('delay-3') ? 300 : 0;
+
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }, delay);
+                }
+            });
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 默认显示首页
+            navigateTo('home');
+
+            // 添加滚动事件监听
+            window.addEventListener('scroll', checkAnimation);
+            checkAnimation(); // 初始检查
+
+            // 点击页面任何地方关闭移动菜单
+            document.addEventListener('click', function(e) {
+                const mobileMenu = document.getElementById('mobile-menu');
+                const menuButton = document.getElementById('mobile-menu-button');
+
+                if (!mobileMenu.contains(e.target) && e.target !== menuButton && !menuButton.contains(e.target)) {
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
